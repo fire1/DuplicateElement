@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<!--
+Demo file for duplicate Fields js
+-->
+<html>
+    <head>
+        <title>Duplicate element</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="http://getbootstrap.com/examples/sticky-footer/sticky-footer.css">
+
+        <!-- Latest jQuery -->
+        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+        <script src="http://getbootstrap.com/assets/js/ie10-viewport-bug-workaround.js"></script>
+        <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+
+        <script src="jscripts/duplicateFields.min.js" type="text/javascript"></script>
+        <script  type="text/javascript">
+            $(function () {
+                $('#additional-field-model').duplicateElement({
+                    "class_remove": ".remove-this-field",
+                    "class_create": ".create-new-field"
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <section>
+            <div class="container">
+                <div class="page-header">
+                    <h1>Duplicate Element</h1>
+                </div>
+                <p class="lead">Simple jQuery pugin for duplicating elements.</p>
+
+                <form name="demo">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-md-12 control-label" for="static-a">Static field</label>
+                            <div class="col-md-12">
+                                <input id="static-a" name="static-a" type="text"  class="form-control input-md" />
+                            </div>
+                        </div>
+                    </fieldset>
+                    <br />
+                    <fieldset id="additional-field-model">
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-12">
+                                <label class="col-md-12 control-label" for="field-a">Field A</label>
+                                <div class="input-group">
+                                    <select id="field-a" name="field-a"   class="form-control input-md"  required="">
+                                        <option disabled="" selected="">Select ...</option>
+                                        <option>Option A</option>
+                                        <option>Option B</option>
+                                        <option>Option C</option>
+                                        <option>Option D</option>
+                                    </select>
+                                    <span class="input-group-addon"> Help text</span>
+                                </div>
+                            </div>
+                            <div class="col-md-2 col-xs-5">
+                                <label class="col-md-12 control-label" for="field-b">Field A</label>
+                                <div class="input-group">
+                                    <input id="field-b" name="field-b" type="text" placeholder="field b" class="form-control input-md" value="" required="">
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-xs-7 text-right">
+                                <label class="col-xs-12 control-label" for="field-c"><br /></label>
+                                <a href="javascript:void(0);"  class="btn btn-warning remove-this-field">
+                                    <i class="fa fa-remove"></i>
+                                    <span class="hidden-xs"> Delete </span>
+                                </a>
+                                <a href="javascript:void(0);"  class="btn btn-success create-new-field">
+                                    <i class="fa fa-plus"></i>
+                                    <span class="hidden-xs"> Duplicate </span>
+                                </a>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <br />
+                </form>
+            </div>
+        </section>
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">Author: <a href="//fire1.eu/" target="_blank">fire1</a>.</p>
+            </div>
+        </footer>
+    </body>
+</html>
