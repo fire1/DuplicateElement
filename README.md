@@ -1,4 +1,3 @@
-
 ## Installation
 
 Include script *after* the jQuery library:
@@ -22,3 +21,4 @@ Include script *after* the jQuery library:
 Very simple script to dublicate and remove your elements in HTML. Can be used in form fieldsets
 
 
+## [ Demo ](https://fire1.github.io/DuplicateElement/)
