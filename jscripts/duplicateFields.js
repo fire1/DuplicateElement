@@ -18,6 +18,8 @@
 (function ($) {
     $.fn.duplicateElement = function (options) {
         options = $.extend($.fn.duplicateElement.defaults, options);
+        var main = this;
+        var $main = $(main).parent();
         return this.each(function () {
             var target = $(this);
             //
@@ -27,16 +29,30 @@
             target[0].parentNode.appendChild(tag);
             //
             // Generate new field
-            var i = 0;
-            $(target, $("#" + options.tag_id)).on("click", options.class_create, function (event) {
-
-                target.clone().addClass("dinamic-field").appendTo("#" + options.tag_id);
-                $(options.class_remove).show();
-                $(options.class_remove).first().hide();
-                $(options.class_create).hide();
-                $(options.class_create).first().show();
+            $(target).parent().on("click", options.class_create, function (event) {
+                var isDinamic = $(this).parents(".dinamic-field");
+                var isStatic = $(this).parents(main);
+                if (isDinamic.length > 0) {
+                    var newElement = isDinamic.clone();
+                } else
+                if (isStatic.length > 0) {
+                    var newElement = isStatic.find(main).clone().addClass("dinamic-field");
+                }
+                //
+                // Handle view of buttons
+                newElement.appendTo("#" + options.tag_id);
+                $main.find(options.class_remove).show();
+                $main.find(options.class_remove).last().hide();
+                $main.find(options.class_create).hide();
+                $main.find(options.class_create).last().show();
+                //
+                // Callback function on create
+                if (typeof options.onCreate === "function") {
+                    options.onCreate(newElement, $(this), event);
+                }
+                //
+                // Prevent Default
                 event.preventDefault();
-                i++;
                 return false;
             });
             //
@@ -44,9 +60,21 @@
             target.find(options.class_remove).first().hide();
             //
             // Remove operation
-            $("#" + options.tag_id).on("click", options.class_remove, function (event) {
-
-                $(this).parents(".dinamic-field").remove();
+            $(target).parent().on("click", options.class_remove, function (event) {
+                var isDinamic = $(this).parents(".dinamic-field");
+                var isStatic = $(this).parents(target);
+                if (isDinamic.length > 0) {
+                    isDinamic.remove();
+                } else
+                if (isStatic.length > 0) {
+                    $(target).empty();
+                    $(target).hide();
+                }
+                //
+                // Callback function on remove
+                if (typeof options.onRemove === "function") {
+                    options.onRemove($(this));
+                }
                 event.preventDefault();
                 return false;
             });
@@ -60,6 +88,8 @@
         tag_id: "dinamic-fields",
         clone_model: "#clone-field-model",
         class_remove: ".remove-this-fields",
-        class_create: ".create-new-fields"
+        class_create: ".create-new-fields",
+        onCreate: "",
+        onRemove: ""
     };
 })(jQuery);
