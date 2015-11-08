@@ -20,31 +20,49 @@
         options = $.extend($.fn.duplicateElement.defaults, options);
         var main = this;
         var $main = $(main).parent();
-        return this.each(function () {
+
+        /**
+         * Generate new element
+         * @param newElement
+         * @param index
+         */
+        function createElement(newElement, index) {
+            $main.find('#' + options.tag_id + index).append(newElement);
+            //newElement.appendTo();
+            $main.find(options.class_remove).show();
+            $main.find(options.class_remove).last().hide();
+            $main.find(options.class_create).hide();
+            $main.find(options.class_create).last().show();
+        }
+
+
+        return this.each(function (index) {
             var target = $(this);
             //
             // Create additional tag for dynamically adding
             var tag = document.createElement(options.tag_name);
-            tag.setAttribute("id", options.tag_id);
+            tag.setAttribute("id", options.tag_id + index);
             target[0].parentNode.appendChild(tag);
+
+
+            target.find(options.class_create).unbind();
             //
             // Generate new field
-            $(target).parent().on("click", options.class_create, function (event) {
-                var isDinamic = $(this).parents(".dinamic-field");
-                var isStatic = $(this).parents(main);
-                if (isDinamic.length > 0) {
-                    var newElement = isDinamic.clone();
-                } else
-                if (isStatic.length > 0) {
-                    var newElement = isStatic.find(main).clone().addClass("dinamic-field");
+            target.parent().on("click", options.class_create, function (event) {
+                var newElement,
+                    isGenerate = $(this).parents(".dinamic-field"),
+                    isStatic = $(this).parent();
+                if (isGenerate.length > 0) {
+                    console.log('static');
+                    newElement = isGenerate.clone();
+                } else if (isStatic.length > 0) {
+                    console.log($(main));
+                    newElement = $(main[index]).clone().addClass("dinamic-field");
                 }
+
                 //
                 // Handle view of buttons
-                newElement.appendTo("#" + options.tag_id);
-                $main.find(options.class_remove).show();
-                $main.find(options.class_remove).last().hide();
-                $main.find(options.class_create).hide();
-                $main.find(options.class_create).last().show();
+                createElement(newElement, index);
                 //
                 // Callback function on create
                 if (typeof options.onCreate === "function") {
@@ -61,12 +79,11 @@
             //
             // Remove operation
             $(target).parent().on("click", options.class_remove, function (event) {
-                var isDinamic = $(this).parents(".dinamic-field");
+                var isGenerate = $(this).parents(".dinamic-field");
                 var isStatic = $(this).parents(target);
-                if (isDinamic.length > 0) {
-                    isDinamic.remove();
-                } else
-                if (isStatic.length > 0) {
+                if (isGenerate.length > 0) {
+                    isGenerate.remove();
+                } else if (isStatic.length > 0) {
                     $(target).empty();
                     $(target).hide();
                 }
@@ -85,7 +102,7 @@
     // Set up the default options.
     $.fn.duplicateElement.defaults = {
         tag_name: 'div',
-        tag_id: "dinamic-fields",
+        tag_id: "#dinamic-fields",
         clone_model: "#clone-field-model",
         class_remove: ".remove-this-fields",
         class_create: ".create-new-fields",
