@@ -26,13 +26,13 @@
          * @param newElement
          * @param index
          */
-        function createElement(newElement, index) {
+        function createElement(target, newElement, index) {
             $main.find('#' + options.tag_id + index).append(newElement);
             //newElement.appendTo();
-            $main.find(options.class_remove).show();
-            $main.find(options.class_remove).last().hide();
-            $main.find(options.class_create).hide();
-            $main.find(options.class_create).last().show();
+            target.find(options.class_remove).show();
+            target.find(options.class_remove).last().hide();
+            target.find(options.class_create).hide();
+            target.find(options.class_create).last().show();
         }
 
 
@@ -62,7 +62,7 @@
 
                 //
                 // Handle view of buttons
-                createElement(newElement, index);
+                createElement(target.parent(),newElement, index);
                 //
                 // Callback function on create
                 if (typeof options.onCreate === "function") {
