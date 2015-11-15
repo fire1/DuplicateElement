@@ -53,10 +53,10 @@
                     isGenerate = $(this).parents(".dinamic-field"),
                     isStatic = $(this).parent();
                 if (isGenerate.length > 0) {
-                    console.log('static');
+                    //console.log('generated');
                     newElement = isGenerate.clone();
                 } else if (isStatic.length > 0) {
-                    console.log($(main));
+                    //console.log($(main));
                     newElement = $(main[index]).clone().addClass("dinamic-field");
                 }
 
