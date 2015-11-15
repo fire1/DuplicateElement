@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (C) 2015 Angel Zaprianov <me@fire1.eu>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -13,7 +13,7 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * Dublicate Fields version: 1.1
+ * Duplicate Fields version: 1.1.2
  */
 
 (function ($) {
@@ -22,80 +22,102 @@
         var main = this;
         var $main = $(main).parent();
 
+        function handleNavigationButtons(ElementTarget) {
+            ElementTarget = ElementTarget.parent();
+            ElementTarget.find(options.class_remove).show();
+            ElementTarget.find(options.class_remove).last().hide();
+            ElementTarget.find(options.class_create).hide();
+            ElementTarget.find(options.class_create).last().show();
+        }
+
         /**
          * Generate new element
+         * @param target
          * @param newElement
-         * @param index
          */
-        function createElement(target, newElement, index) {
-            $main.find('#' + options.tag_id + index).append(newElement);
-            //newElement.appendTo();
-            target.find(options.class_remove).show();
-            target.find(options.class_remove).last().hide();
-            target.find(options.class_create).hide();
-            target.find(options.class_create).last().show();
+        function createElement(target, newElement) {
+            clickNewExecutor(newElement);
+            target.parent().append(newElement);
         }
 
 
-        return this.each(function (index) {
-            var target = $(this);
-            //
-            // Create additional tag for dynamically adding
-            var tag = document.createElement(options.tag_name);
-            tag.setAttribute("id", options.tag_id + index);
-            target[0].parentNode.appendChild(tag);
-
-
-            target.find(options.class_create).unbind();
-            //
-            // Generate new field
-            target.parent().on("click", options.class_create, function (event) {
+        /**
+         * Generate new fild on click
+         * @param ElementTarget
+         */
+        function clickNewExecutor(ElementTarget) {
+            console.log(ElementTarget);
+            ElementTarget.find(options.class_create).unbind();
+            ElementTarget.on("click", options.class_create, function (event) {
                 var newElement,
-                    isGenerate = $(this).parents(".dinamic-field"),
+                    isGenerate = $(this).parent(".dinamic-field"),
                     isStatic = $(this).parent();
                 if (isGenerate.length > 0) {
                     //console.log('generated');
                     newElement = isGenerate.clone();
                 } else if (isStatic.length > 0) {
                     //console.log($(main));
-                    newElement = $(main[index]).clone().addClass("dinamic-field");
+                    newElement = ElementTarget.clone().addClass("dinamic-field");
                 }
-
                 //
                 // Handle view of buttons
-                createElement(target.parent(),newElement, index);
+                createElement(ElementTarget, newElement);
+                //
+                // Add remove listener
+                clickRemoveExecutor(ElementTarget);
                 //
                 // Callback function on create
                 if (typeof options.onCreate === "function") {
                     options.onCreate(newElement, $(this), event);
                 }
                 //
+                // Manage buttons
+                handleNavigationButtons(ElementTarget);
+                //
                 // Prevent Default
                 event.preventDefault();
                 return false;
             });
-            //
-            // Hide remove button
-            target.find(options.class_remove).first().hide();
-            //
-            // Remove operation
-            $(target).parent().on("click", options.class_remove, function (event) {
+        }
+
+        function clickRemoveExecutor(ElementTarget) {
+            ElementTarget.on("click", options.class_remove, function (event) {
                 var isGenerate = $(this).parents(".dinamic-field");
-                var isStatic = $(this).parents(target);
+                var isStatic = $(this).parents(ElementTarget);
                 if (isGenerate.length > 0) {
                     isGenerate.remove();
                 } else if (isStatic.length > 0) {
-                    $(target).empty();
-                    $(target).hide();
+                    ElementTarget.empty();
+                    ElementTarget.hide();
+                    ElementTarget.remove();
                 }
                 //
                 // Callback function on remove
                 if (typeof options.onRemove === "function") {
                     options.onRemove($(this));
                 }
+                //
+                // Manage buttons
+                handleNavigationButtons(ElementTarget);
+                //
+                // Prevent Default
                 event.preventDefault();
                 return false;
             });
+        }
+
+        return this.each(function () {
+            var target = $(this);
+            handleNavigationButtons(target);
+            //
+            // Generate new field on click
+            clickNewExecutor(target);
+            //
+            // Hide remove button
+            target.find(options.class_remove).first().hide();
+            //
+            // Remove operation
+            clickRemoveExecutor(target)
 
         });
     };
