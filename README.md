@@ -26,6 +26,12 @@ Include script *after* the jQuery library:
 	        onCreate: function (el) {
 				// Reseting values 
 	            el.find("select").prop('defaultSelected');
+		    /* 
+		    for newer jquery use:
+			el.find("select option").prop('selected', function () {
+                 		return $(this).prop('defaultSelected');
+            		});
+		    */
 	            el.find("input").val('');
 	            el.find(".module-price").text('00');
 	        }
